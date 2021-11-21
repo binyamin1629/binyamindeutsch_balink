@@ -2,19 +2,19 @@ const express = require("express");
 const cors=require('cors');
 const userRouter=require('./routes/user.js');
 const path=require('path');
+const { dirname } = require("path");
 const app = express();
 app.use(express.json());
 
-app.use(cors())
+app.use(cors());
 
-
-// const root=require('path').join(__dirname,'build');
-// app.use(express.static(root))
-
-// app.use('/*',(req,res)=>{
-//     res.sendFile(path.join(__dirname,'build','index.html'))
-// })
-
+app.use(express.json());
+app.use(express.static(path.join('D:/ba-link-home-task/frontend/usermanager/build/index.html')))
+console.log(__dirname,'D:/ba-link-home-task/frontend/usermanager/build/index.html');
+app.use('/*',(req,res)=>{
+    res.sendFile(path.join('D:/ba-link-home-task/frontend/usermanager/build/'));
+})
+//D:\ba-link-home-task\frontend\usermanager\build\index.html
 app.get('/',(req,res)=>{
     res.redirect('/users');
 })

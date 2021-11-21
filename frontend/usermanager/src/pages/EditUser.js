@@ -21,7 +21,7 @@ const EditUser = () => {
         let user = {
             id: id
         }
-        const BASE_URL = 'http://localhost:8000/users/delete-user';
+        const BASE_URL = '/users/delete-user';
 
 
         fetch(BASE_URL, {
@@ -41,7 +41,7 @@ const EditUser = () => {
     const editUser = (userdata) => {
 
         userData.id = uid;
-        const BASE_URL = 'http://localhost:8000/users/edit-user';
+        const BASE_URL = '/users/edit-user';
 
 
         fetch(BASE_URL, {
