@@ -25,7 +25,7 @@ router.put("/add-user",vlidateUser, (req, res) => {
    
    let result=controller.addUser(req.body);
    result.then((data) => {
-    res.send(data);
+    res.send("user has been added");
    },(err)=>{
        console.log(err)
     res.send(err);
@@ -37,7 +37,7 @@ router.delete('/delete-user',(req,res)=>{
    
     let result= controller.deleteUser(req.body.id);
     result.then((data) => {
-        res.send(data)
+        res.send("user has been deleted")
     },(err)=>{
         res.send(err);
     })
@@ -49,7 +49,7 @@ router.post('/edit-user', vlidateUpdatedUser,vlidateUser,(req, res) => {
     let result=controller.editUser(req.body);
     
    result.then((data) => {  
-        res.send('user has been deleted');
+        res.send('user has been updated');
    },(err)=>{
        console.log(err)
     res.send(err);

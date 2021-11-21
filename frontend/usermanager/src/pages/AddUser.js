@@ -5,7 +5,7 @@ import {useNavigate} from 'react-router-dom';
 
 const Adduser = () => {
 
-    const BASE_URL='/users/add-user';
+    const BASE_URL='http://localhost:8000/users/add-user';
     const navigate = useNavigate();
 
     const AddnewUser=(userdata)=>{

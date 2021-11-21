@@ -1,1 +1,30 @@
-[{"first_name":"binyamin ","last_name":"deutsch","age":"30","phone":"0547035320","id":1},{"first_name":"rachel","last_name":"deustch","age":"26","phone":"0585922822","id":2},{"first_name":"david","last_name":"cohen","age":"15","phone":"0585050501","id":3},{"first_name":"bat sheva","last_name":"deutsch","age":"0","phone":"0547035320","id":4}]
+[
+    {
+        "first_name": "binyamin ",
+        "last_name": "deutsch",
+        "age": "30",
+        "phone": "0547035320",
+        "id": 1
+    },
+    {
+        "first_name": "rachel",
+        "last_name": "deustch",
+        "age": "26",
+        "phone": "0585922822",
+        "id": 2
+    },
+    {
+        "first_name": "david",
+        "last_name": "cohen",
+        "age": "15",
+        "phone": "0585050501",
+        "id": 3
+    },
+    {
+        "first_name": "bat sheva",
+        "last_name": "deutsch",
+        "age": "0",
+        "phone": "0547035320",
+        "id": 4
+    }
+]

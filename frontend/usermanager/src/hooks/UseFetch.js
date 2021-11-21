@@ -12,7 +12,7 @@ const Usefetch=()=>{
 
 
         setLoading(true)
-        const BASE_URL = '/users'
+        const BASE_URL = 'http://localhost:8000/users'
         fetch(BASE_URL, { headers: { 
             'Content-Type': 'application/json',
             'Accept': 'application/json'

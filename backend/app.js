@@ -10,7 +10,7 @@ app.use(cors());
 
 app.use(express.json());
 app.use(express.static(path.join('D:/ba-link-home-task/frontend/usermanager/build/index.html')))
-console.log(__dirname,'D:/ba-link-home-task/frontend/usermanager/build/index.html');
+//console.log(__dirname,'D:/ba-link-home-task/frontend/usermanager/build/index.html');
 app.use('/*',(req,res)=>{
     res.sendFile(path.join('D:/ba-link-home-task/frontend/usermanager/build/'));
 })
