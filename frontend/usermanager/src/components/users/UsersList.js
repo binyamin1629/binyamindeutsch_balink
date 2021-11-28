@@ -1,8 +1,7 @@
 import React from 'react'
 import SingleUser from './SingleUser'
 import { useNavigate } from 'react-router-dom';
-import classes from './usersList.module.css';
-
+import {TableWrap,Table,TrHead,Th,PlusWrap,PlusIcon} from '../styledComponents/TableStyle'
 
 const UsersList = (props) => {
     const navigate = useNavigate();
@@ -15,23 +14,23 @@ const UsersList = (props) => {
 
 
     return (
-        <div className={classes.table_warp}>
+        <TableWrap>
 
-            <table cellSpacing="0">
-                <thead  >
-                    <tr className={classes.table_head}>
+            <Table>
+                <thead>
+                    <TrHead>
 
-                        <th>ID</th>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Age</th>
-                        <th>Phone</th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
+                        <Th>ID</Th>
+                        <Th>First Name</Th>
+                        <Th>Last Name</Th>
+                        <Th>Age</Th>
+                        <Th>Phone</Th>
+                        <Th></Th>
+                        <Th></Th>
+                        <Th></Th>
                       
 
-                    </tr>
+                    </TrHead>
                 </thead>
 
                 <tbody>
@@ -49,11 +48,11 @@ const UsersList = (props) => {
                     )}
 
                 </tbody>
-            </table>
-            <div className={classes.plus_warp}>
-                <div className={classes.plus} onClick={goToAddUser}>&#43;</div>
-            </div>
-        </div>
+            </Table>
+            <PlusWrap>
+                <PlusIcon onClick={goToAddUser}>&#43;</PlusIcon>
+            </PlusWrap>
+        </TableWrap>
     )
 }
 

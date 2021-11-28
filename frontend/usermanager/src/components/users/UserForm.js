@@ -1,8 +1,24 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
-import Card from '../ui/Card'
-import classes from './userform.module.css'
+import Input from './Input';
+import Select from './Select';
+import Button from './Button';
+import Validation from './Validation';
+
+import Card from '../ui/Card';
+import { FormWrap } from '../styledComponents/UserFormContainer';
+import { BtnWrap } from '../styledComponents/Buttons';
+import { UserInfoWrap, IconWrap, UserInfo,Image } from '../styledComponents/UserInfosStyle'
+
+
+
+
+
+
+
+
+
 const UserForm = (props) => {
 
 
@@ -10,12 +26,16 @@ const UserForm = (props) => {
     const navigate = useNavigate();
 
 
-    const [firstName, setFirstName] = useState(props.userInitialData.first_name);
-    const [lastName, setLastName] = useState(props.userInitialData.last_name);
-    const [age, setAge] = useState(props.userInitialData.age);
-    const [phone, setPhone] = useState(props.userInitialData.phone);
+    const [user, setUser] = useState({
+        firstName: props.userInitialData.first_name,
+        lastName: props.userInitialData.last_name,
+        age: props.userInitialData.age,
+        phone: props.userInitialData.phone
+    });
 
-    const [validation, setValidation] = useState(
+
+    const [currentChange, setCurrentChange] = useState(
+
         {
             isOnChangEventFirstName: false,
             isOnChangEventLastName: false,
@@ -25,18 +45,8 @@ const UserForm = (props) => {
     );
 
 
-    const [options, setOptions] = useState([]);
 
 
-
-    useEffect(() => {
-        let arr = [];
-        for (var i = 0; i < 121; i++) {
-            arr.push(i)
-        }
-        setOptions(arr)
-
-    }, [])
 
     const handleDelete = (event) => {
         event.preventDefault();
@@ -51,11 +61,12 @@ const UserForm = (props) => {
 
     const submitHandler = (event) => {
         event.preventDefault();
-        console.log('submit handler');
 
-        if (phone.length < 9 || isNaN(phone) || firstName.length < 3 || lastName.length < 3) {
 
-            setValidation({
+
+        if (user.phone.length < 9 || isNaN(user.phone) || user.firstName.length < 3 || user.lastName.length < 3) {
+
+            setCurrentChange({
                 isOnChangEventFirstName: true,
                 isOnChangEventLastName: true,
                 isOnChangEventPhone: true,
@@ -64,134 +75,145 @@ const UserForm = (props) => {
             return;
         }
 
-        const user = {
-            first_name: firstName,
-            last_name: lastName,
-            age: age,
-            phone: phone
+
+
+
+        const Finaluser = {
+            first_name: user.firstName,
+            last_name: user.lastName,
+            age: user.age,
+            phone: user.phone
         }
+        
+
         if (uid) {
-            user.id = uid;
+            Finaluser.id = uid;
         }
 
-        props.onSubmitUser(user);
+        props.onSubmitUser(Finaluser);
 
     }
 
-    const handlePhone = (e) => {
-        e.preventDefault();
-        setValidation({ ...false, isOnChangEventPhone: true });
-        setPhone(e.target.value);
+
+
+    const HandleInput = (e, name) => {
+
+
+        switch (name) {
+            case 'first_name':
+                setUser({ ...user, firstName: e.target.value });
+                setCurrentChange({ ...false, isOnChangEventFirstName: true });
+                break;
+            case 'last_name':
+                setUser({ ...user, lastName: e.target.value })
+                setCurrentChange({ ...false, isOnChangEventLastName: true });
+                break;
+            case 'age':
+                setUser({ ...user, age: e.target.value });
+                setCurrentChange({ ...false, isOnChangEventAge: true });
+                break;
+            case 'phone':
+                setUser({ ...user, phone: e.target.value })
+                setCurrentChange({ ...false, isOnChangEventPhone: true });
+                break;
+            default:
+                break;
+        }
+
+     
 
     }
 
-    const handleFirstName = (e) => {
-        e.preventDefault();
-        setValidation({ ...false, isOnChangEventFirstName: true });
-        setFirstName(e.target.value)
 
-    }
-    const handleLastName = (e) => {
-        e.preventDefault();
-        setLastName(e.target.value)
-        setValidation({ ...false, isOnChangEventLastName: true });
-        //console.log(validation);
-    }
-
-    const handleAge = (e) => {
-        e.preventDefault();
-        setValidation({ ...false, isOnChangEventAge: true });
-        setAge(e.target.value);
-
-
-    }
 
     const goToHome = () => {
         navigate('/');
     }
 
 
+
     return (
         <Card>
 
             {props.fname ?
-                <div className={classes.user_info_wrap}>
+                <UserInfoWrap>
 
-                    <div className={classes.icon_wrap}>
-                        <img src="https://avatars.dicebear.com/api/human/:seed.svg" alt="" />
-                    </div>
-                    <div className={classes.user_info}>
+                    <IconWrap>
+                        <Image src="https://avatars.dicebear.com/api/human/:seed.svg" alt="" />
+                    </IconWrap>
+
+                    <UserInfo>
                         <span>{props.fname} {props.lname}</span>
-                    </div>
+                    </UserInfo>
 
-                </div>
+                </UserInfoWrap>
                 : null
             }
 
-            <form onSubmit={submitHandler} className={classes.form}>
+            <FormWrap>
 
-
-
-                <input type="text" required
-                    className={validation.isOnChangEventFirstName && firstName.length < 3 ? classes.red : classes.input}
-                    onChange={handleFirstName}
-                    value={firstName}
+                <Input HandleInputEvent={HandleInput}
+                    val={user.firstName}
                     placeholder="First Name"
-
+                    type="Text"
+                    name="first_name"
+                    NotValid={currentChange.isOnChangEventFirstName && user.firstName.length < 3 ? true : false}
                 />
 
-                {validation.isOnChangEventFirstName && firstName.length < 3 ? <div className={classes.error}>Filed must have at list 3  Charters</div> : ''}
+                {currentChange.isOnChangEventFirstName && user.firstName.length < 3 ?
+                    <Validation validationName="Filed must have at list 3 Charters" />
+                    : null}
 
-
-                <input type="text" required
-                    className={validation.isOnChangEventLastName && lastName.length < 3 ? classes.red : classes.input}
-                    onChange={handleLastName} value={lastName}
+                <Input HandleInputEvent={HandleInput}
+                    val={user.lastName}
                     placeholder="Last Name"
-
+                    type="Text"
+                    name="last_name"
+                    NotValid={currentChange.isOnChangEventLastName && user.lastName.length < 3 ? true : false}
                 />
 
-                {validation.isOnChangEventLastName && lastName.length < 3 ? <div className={classes.error}>Filed must have at list 3  Charters</div> : ''}
+                {currentChange.isOnChangEventLastName && user.lastName.length < 3 ?
+                    <Validation validationName="Filed must have at list 3 Charters" /> : null}
+                <Select
+                    val={user.age}
+                    HandleInputEvent={HandleInput}
+                    name="age"
+                />
+
+                {currentChange.isOnChangEventAge && user.age == "Age" ?
+                    <Validation validationName="You Must Select Age" /> : null}
 
 
-                <select
-                    value={age}
-                    onChange={handleAge}
-                    className={validation.isOnChangEventAge && age == 'Age' ? classes.red : classes.select}
-
-                >
-                    <option defaultValue="Age">Age</option>
-                    {
-                        options.map((i) => {
-
-                            return <option key={i} value={i}>{i}</option>
-                        })
-                    }
-
-                </select>
-                {validation.isOnChangEventAge && age == 'Age' ? <div className={classes.error}>You Must Select Age</div> : ''}
-
-                <input type="tel" name="phone" required
-                    className={validation.isOnChangEventPhone && phone.length < 10 ? classes.red
-                        || validation.isOnChangEventPhone && isNaN(phone) ? classes.red
-                        : classes.input : classes.input}
-                    onChange={handlePhone}
-                    value={phone}
+                <Input HandleInputEvent={HandleInput}
+                    val={user.phone}
                     placeholder="Phone"
+                    type="tel"
+                    name="phone"
+                    NotValid={currentChange.isOnChangEventPhone ? isNaN(user.phone) || user.phone.length < 10 ? true : false : null}
                 />
 
+                {currentChange.isOnChangEventPhone && isNaN(user.phone) ? <Validation validationName="Field Must Have Only Numbers" /> : null}
+                {currentChange.isOnChangEventPhone && user.phone.length < 10 ?
+                    <Validation validationName="Field Must Have At List 10 Charters" /> : null}
 
-                {validation.isOnChangEventPhone && phone.length < 10 ? <div className={classes.error}>Field Must Have At List 10  Charters</div> : ''}
-                {validation.isOnChangEventPhone && isNaN(phone) ? <div className={classes.error}>Field Must Have Only Numbers</div> : ''}
 
-                <div className={props.onDeleteUser ? classes.btn_warp_delete : classes.btn_warp}>
-                    <button className={classes.title}>{props.butttoTitle}</button>
+                <BtnWrap>
 
-                    {props.onDeleteUser ? <button className={classes.delete} onClick={handleDelete}>Delete</button> : null}
+                    <Button
+                        butttoTitle={props.butttoTitle}
+                        HandlePress={submitHandler}
+                        backColor='#35586C'
+                    />
+                    {props.onDeleteUser ? <Button backColor="#DAA520" butttoTitle="Delete" HandlePress={handleDelete} /> : null}
+                    <Button
+                        butttoTitle="Back"
+                        HandlePress={goToHome}
+                        backColor='#8B0000'
+                    />
 
-                    <button className={classes.back} onClick={goToHome}>Back</button>
-                </div>
+                </BtnWrap>
 
-            </form>
+            </FormWrap>
         </Card>
 
     )

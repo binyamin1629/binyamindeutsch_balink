@@ -1,5 +1,4 @@
-const fs = require('fs');
-const data = require('../db/dataHandling.js');
+const client = require('../db/dbPostgresqlConf.js');
 
 const controller = {};
 
@@ -7,126 +6,76 @@ const controller = {};
 
 
 
-controller.getAllUsers = () => {
+controller.getAllUsers = async () => {
 
 
-
-    return new Promise((resolve, reject) => {
-
-        fs.readFile('backend/db/users.json', (err, data) => {
-            if (err) {
-                return reject(err)
-            } else {
-                resolve(data);
-            }
-        })
-    })
-
-
+    try {
+        let dbData = await client.query('SELECT * FROM users');
+        
+        if(!dbData.rows.length>0){return new Error('we had some truble getting data');}
+        return dbData.rows;
+    } catch (error) {
+        console.log(error)
+    }
 
 }
 
-controller.addUser = (body) => {
+controller.addUser = async (body) => {
 
-    return new Promise((resolve, reject) => {
-        let Lastuser;
-        fs.readFile('backend/db/users.json', (err, data) => {
-            if (err) {
-                return reject(err)
-            } else {
-                
-                
-                var arr = JSON.parse(data);
-                console.log(arr,"arr")
-                if (arr.length == 0) { 
-                    body.id = 1;
-                }else{
-                     Lastuser = arr[arr.length - 1];
-                     body.id = parseInt(Lastuser.id) + 1;
-                }
-               
-               
-               
-                arr.push(body)
-                fs.writeFile('backend/db/users.json', JSON.stringify(arr), (err, data) => {
-                    if (err) {
 
-                    }
-                    else {
-                        resolve(data);
-                    }
-                })
+    try {
+        let addUser = await client.query(
+            "INSERT INTO users (first_name,last_name,age,phone) VALUES ($1,$2,$3,$4) RETURNING * ",
+            [body.first_name, body.last_name, body.age, body.phone]
+        );
+        if(!addUser.rows[0]) return new Error('there was a problom inserting data');
+        return addUser.rows[0];
 
-            }
-        })
-    })
+    } catch (error) {
+        console.log(error)
+    }
+
 }
 
-controller.editUser = (body) => {
-    return new Promise((resolve, reject) => {
+controller.editUser = async (body) => {
 
-        fs.readFile('backend/db/users.json', (err, data) => {
-            if (err) {
-                return reject(err)
-            } else {
 
-                var arr = JSON.parse(data);
-                if (!arr.find(u => u.id) == body.id) {
-                    throw new Error('failed')
-                }
-                arr.forEach(u => {
-                    if (u.id == body.id) {
-                        u.first_name = body.first_name
-                        u.last_name = body.last_name
-                        u.age = body.age
-                        u.phone = body.phone
-                    }
-                })
-                fs.writeFile('backend/db/users.json', JSON.stringify(arr), (err, data) => {
-                    if (err) {
 
-                    }
-                    else {
-                        resolve(data);
-                    }
-                })
 
-            }
-        })
-    })
+    try {
+        let userID = await client.query(" SELECT id FROM users  WHERE id = $1",
+        [body.id]);
+
+        if (userID.rows.length > 0){
+            let  updateUser = await client.query(" UPDATE users SET first_name=$1  ,last_name=$2,age=$3,phone= $4 WHERE id = $5 "
+                 , [body.first_name, body.last_name, body.age, body.phone, body.id])
+        return updateUser.rows;
+        }
+        else{
+            return new Error('user not found');
+        }
+
+    } catch (error) {
+        console.log(error)
+    }
+
 }
 
 
-controller.deleteUser = (id) => {
-    
-    return new Promise((resolve, reject) => {
+controller.deleteUser = async (id) => {
 
-        fs.readFile('backend/db/users.json', (err, data) => {
-            if (err) {
-                return reject(err)
-            } else {
 
-                var arr = JSON.parse(data);
-                if (!arr.find(u => u.id) == id) {
-                    throw new Error('failed')
-                }
+    try {
+        let userID = await client.query(" SELECT id FROM users  WHERE id = $1",
+        [id]);
+        if(!userID) return new Error('user not found');
+          
+       
+        let deletedUser= await client.query("DELETE FROM users where id =$1;",[id])
 
-                let deletedArray = arr.filter((u) => u.id != id)
-
-                 
-                fs.writeFile('backend/db/users.json', JSON.stringify(deletedArray), (err, data) => {
-                    if (err) {
-
-                    }
-                    else {
-                        resolve(data);
-                    }
-                })
-
-            }
-        })
-    })
-
+    } catch (error) {
+        console.log(error)
+    }
 
 }
 

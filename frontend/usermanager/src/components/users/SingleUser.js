@@ -1,7 +1,6 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
-import classes from './singleuser.module.css';
-
+import { TrBody,Td } from '../styledComponents/TableStyle';
 const SingleUser = (props) => {
 
     const navigate = useNavigate();
@@ -9,29 +8,28 @@ const SingleUser = (props) => {
     const goToEditUser = () => {
         navigate(`edit-user/${props.id}`)
     }
-    console.log(props.index)
+   
 
     return (
 
-        
+ 
+        <TrBody onClick={goToEditUser} TrColor={props.index%2==0?'#f5f5f5':''}>
 
-            <tr  onClick={goToEditUser} 
-            
-            className={props.index%2==0?classes.table_body:classes.table_body_gray}>
-              
-                <td>{props.id}</td>
-                <td>{props.first_name}</td>
-                <td>{props.last_name}</td>
-                <td>{props.age}</td>
-                <td>{props.phone}</td>
-                <td></td>
-                <td></td>
-                <td></td>
-               
-               
-            </tr>
 
-       
+
+            <Td>{props.id}</Td>
+            <Td>{props.first_name}</Td>
+            <Td>{props.last_name}</Td>
+            <Td>{props.age}</Td>
+            <Td>{props.phone}</Td>
+            <Td></Td>
+            <Td></Td>
+            <Td></Td>
+
+
+        </TrBody>
+
+
 
 
     )

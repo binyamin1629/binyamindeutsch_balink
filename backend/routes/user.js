@@ -2,85 +2,91 @@ const router = require("express").Router();
 const controller = require('../controllers/userController.js');
 
 //get all users...
-router.get("/", (req, res) => {
-    let result = controller.getAllUsers();
-    //console.log("got to routr");
- 
+router.get("/", async (req, res) => {
 
-    
-    result.then((data) => {
-        //console.log(JSON.parse(data));
-        res.send(JSON.parse(data));
-    }, (err) => {
-        // res.sendStatus(500);
-        res.send('ther was a problom');
-    });
+    try {
+        let result =await controller.getAllUsers();     
+        res.status(200).send(result)
+       // res.send(200,result)
+    } catch (err) {
+        res.status(404).send('ther was a problom')
+
+    }
 
 })
 
 
 
 //add user
-router.put("/add-user",vlidateUser, (req, res) => {
-   
-   let result=controller.addUser(req.body);
-   result.then((data) => {
-    res.send("user has been added");
-   },(err)=>{
-       console.log(err)
-    res.send(err);
-   })
+router.put("/add-users", vlidateUser, async (req, res) => {
+
+    try {
+
+        let result=await controller.addUser(req.body);
+        res.status(200).send("user has been added")
+        
+        
+    } catch (err) {
+        console.log(err)
+        res.status(404).send(err);
+    }
    
 })
 
-router.delete('/delete-user',(req,res)=>{
+router.delete('/delete-users',async (req,res)=>{
+
+    try {
+        let result= await controller.deleteUser(req.body.id);
+        res.status(200).send("user has been deleted")
+    } catch (err) {
+        res.status(404).send(err);
+    }
    
-    let result= controller.deleteUser(req.body.id);
-    result.then((data) => {
-        res.send("user has been deleted")
-    },(err)=>{
-        res.send(err);
-    })
+    
+  
 })
 
 //update user
-router.post('/edit-user', vlidateUpdatedUser,vlidateUser,(req, res) => {
-    console.log(req.body)
-    let result=controller.editUser(req.body);
+router.post('/edit-users', vlidateUpdatedUser,vlidateUser, async(req, res) => {
+
+    //getting id in body on need to do /edit-user
+    try {
+        let result=await controller.editUser(req.body);      
+        res.status(200).send('user has been updated');
+    } catch (err) {
+        res.status(404).send(err);
+    }
     
-   result.then((data) => {  
-        res.send('user has been updated');
-   },(err)=>{
-       console.log(err)
-    res.send(err);
-   })
+  
+    
+ 
 })
 
-function vlidateUpdatedUser(req,res,next){
+async function vlidateUpdatedUser(req,res,next){
 
         if(!req.body.id){
-            return res.send("no such user");
+            return await res.send("no such user");
         }       
-        next();
+        await next();
 }
 
-function vlidateUser(req,res,next){
+async function vlidateUser(req,res,next){
     console.log(req.body)
     if(req.body.first_name==""||req.body.last_name==""||req.body.age==""||req.body.phone==""){
-       return res.send("invalid fildeds given!!");
+       return await res.send("invalid fildeds given!!");
     }
     if(isNaN(parseInt(req.body.age))||isNaN(parseInt(req.body.phone))){
-       return res.send("Filed must be a number");
+       return await res.send("Filed must be a number");
     }   
     let Age=parseInt(req.body.age);
     if(Age<0||Age>120){
-        return res.send("invalid age!");
+        return await res.send("invalid age!");
     }
     console.log(req.body.phone.lenght)
     // if(req.body.phone.lenght==11){
     //    return res.send("invalid phone number!");
     // }
-    next();
+   await next();
 }
 
 

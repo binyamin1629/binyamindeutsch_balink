@@ -3,12 +3,12 @@ import UseFetch from '../hooks/UseFetch';
 import { useParams } from 'react-router-dom';
 import UserForm from '../components/users/UserForm';
 import { useNavigate } from 'react-router-dom';
-
-
+import { Title } from '../components/styledComponents/TitleStyle'
+import { Loading } from '../components/styledComponents/Loader';
 const EditUser = () => {
- 
-    var userInitialData;
-    var userData = {};
+
+    let userInitialData;
+  
     const navigate = useNavigate();
     const { uid } = useParams();
 
@@ -17,11 +17,10 @@ const EditUser = () => {
 
     const deleteUser = (id) => {
 
-        console.log(id)
-        let user = {
+            let user = {
             id: id
         }
-        const BASE_URL = 'http://localhost:8000/users/delete-user';
+        const BASE_URL = 'http://localhost:8000/api/users/delete-users';
 
 
         fetch(BASE_URL, {
@@ -39,9 +38,9 @@ const EditUser = () => {
 
 
     const editUser = (userdata) => {
-
+        let userData={};
         userData.id = uid;
-        const BASE_URL = 'http://localhost:8000/users/edit-user';
+        const BASE_URL = 'http://localhost:8000/api/users/edit-users';
 
 
         fetch(BASE_URL, {
@@ -60,9 +59,7 @@ const EditUser = () => {
 
 
     if (loading) {
-        return <section>
-            <p>Loading...</p>
-        </section>
+        return <Loading></Loading>
     }
 
 
@@ -79,13 +76,13 @@ const EditUser = () => {
     }
 
     if (!userInitialData) {
-        console.log(users)
-        return <div>Loading user Data</div>
+
+        return <Loading></Loading>
     }
 
     return (
         <>
-             <h1 style={{color:'#35586C'}}>Edit User</h1>  
+            <Title color='#35586C'>Edit User</Title>
 
 
 
